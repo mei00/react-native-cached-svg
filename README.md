@@ -1,4 +1,4 @@
-# react-native-svg-uri
+# react-native-fast-svg
 Render SVG images in React Native using a URL or a static file.
 
 SVG's rendered from a url are cached using react native's Async Storage.
