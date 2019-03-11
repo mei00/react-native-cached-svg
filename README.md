@@ -39,7 +39,7 @@ react-native link react-native-svg # not react-native-fast-svg !!!
 Here's a simple example:
 
 ```javascript
-import SvgUri from 'react-native-svg-uri';
+import SvgUri from 'react-native-fast-svg';
 
 const TestSvgUri = () => (
   <View style={styles.container}>
