@@ -1,24 +1,25 @@
 import React, {Component} from "react";
-import {View, AsyncStorage} from 'react-native';
+import {View} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import PropTypes from 'prop-types'
 import xmldom from 'xmldom';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 import Svg,{
-    Circle,
-    Ellipse,
-    G ,
-    LinearGradient,
-    RadialGradient,
-    Line,
-    Path,
-    Polygon,
-    Polyline,
-    Rect,
-    Text,
-    TSpan,
-    Defs,
-    Stop
+  Circle,
+  Ellipse,
+  G ,
+  LinearGradient,
+  RadialGradient,
+  Line,
+  Path,
+  Polygon,
+  Polyline,
+  Rect,
+  Text,
+  TSpan,
+  Defs,
+  Stop
 } from 'react-native-svg';
 
 import * as utils from './utils';
@@ -60,10 +61,11 @@ const POLYGON_ATTS = ['points'];
 const POLYLINE_ATTS = ['points'];
 
 const COMMON_ATTS = ['fill', 'fillOpacity', 'stroke', 'strokeWidth', 'strokeOpacity', 'opacity',
-    'strokeLinecap', 'strokeLinejoin',
-    'strokeDasharray', 'strokeDashoffset', 'x', 'y', 'rotate', 'scale', 'origin', 'originX', 'originY', 'transform', 'clipPath'];
+  'strokeLinecap', 'strokeLinejoin',
+  'strokeDasharray', 'strokeDashoffset', 'x', 'y', 'rotate', 'scale', 'origin', 'originX', 'originY', 'transform', 'clipPath'];
 
 let ind = 0;
+let indexForKey = 0;
 
 function fixYPosition (y, node) {
   if (node.attributes) {
@@ -99,11 +101,11 @@ class SvgUri extends Component{
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.isComponentMounted = true;
   }
 
-  componentWillReceiveProps (nextProps){
+  UNSAFE_componentWillReceiveProps (nextProps){
     if (nextProps.source) {
       const source = resolveAssetSource(nextProps.source) || {};
       const oldSource = resolveAssetSource(this.props.source) || {};
@@ -168,62 +170,62 @@ class SvgUri extends Component{
     let componentAtts = {};
     const i = ind++;
     switch (node.nodeName) {
-    case 'svg':
-      componentAtts = this.obtainComponentAtts(node, SVG_ATTS);
-      if (this.props.width) {
-        componentAtts.width = this.props.width;
-      }
-      if (this.props.height) {
-        componentAtts.height = this.props.height;
-      }
+      case 'svg':
+        componentAtts = this.obtainComponentAtts(node, SVG_ATTS);
+        if (this.props.width) {
+          componentAtts.width = this.props.width;
+        }
+        if (this.props.height) {
+          componentAtts.height = this.props.height;
+        }
 
-      return <Svg key={i} {...componentAtts}>{childs}</Svg>;
-    case 'g':
-      componentAtts = this.obtainComponentAtts(node, G_ATTS);
-      return <G key={i} {...componentAtts}>{childs}</G>;
-    case 'path':
-      componentAtts = this.obtainComponentAtts(node, PATH_ATTS);
-      return <Path key={i} {...componentAtts}>{childs}</Path>;
-    case 'circle':
-      componentAtts = this.obtainComponentAtts(node, CIRCLE_ATTS);
-      return <Circle key={i} {...componentAtts}>{childs}</Circle>;
-    case 'rect':
-      componentAtts = this.obtainComponentAtts(node, RECT_ATTS);
-      return <Rect key={i} {...componentAtts}>{childs}</Rect>;
-    case 'line':
-      componentAtts = this.obtainComponentAtts(node, LINE_ATTS);
-      return <Line key={i} {...componentAtts}>{childs}</Line>;
-    case 'defs':
-      return <Defs key={i}>{childs}</Defs>;
-    case 'linearGradient':
-      componentAtts = this.obtainComponentAtts(node, LINEARG_ATTS);
-      return <LinearGradient key={i} {...componentAtts}>{childs}</LinearGradient>;
-    case 'radialGradient':
-      componentAtts = this.obtainComponentAtts(node, RADIALG_ATTS);
-      return <RadialGradient key={i} {...componentAtts}>{childs}</RadialGradient>;
-    case 'stop':
-      componentAtts = this.obtainComponentAtts(node, STOP_ATTS);
-      return <Stop key={i} {...componentAtts}>{childs}</Stop>;
-    case 'ellipse':
-      componentAtts = this.obtainComponentAtts(node, ELLIPSE_ATTS);
-      return <Ellipse key={i} {...componentAtts}>{childs}</Ellipse>;
-    case 'polygon':
-      componentAtts = this.obtainComponentAtts(node, POLYGON_ATTS);
-      return <Polygon key={i} {...componentAtts}>{childs}</Polygon>;
-    case 'polyline':
-      componentAtts = this.obtainComponentAtts(node, POLYLINE_ATTS);
-      return <Polyline key={i} {...componentAtts}>{childs}</Polyline>;
-    case 'text':
-      componentAtts = this.obtainComponentAtts(node, TEXT_ATTS);
-      return <Text key={i} {...componentAtts}>{childs}</Text>;
-    case 'tspan':
-      componentAtts = this.obtainComponentAtts(node, TEXT_ATTS);
-      if (componentAtts.y) {
-        componentAtts.y = fixYPosition(componentAtts.y, node)
-      }
-      return <TSpan key={i} {...componentAtts}>{childs}</TSpan>;
-    default:
-      return null;
+        return <Svg key={i} {...componentAtts}>{childs}</Svg>;
+      case 'g':
+        componentAtts = this.obtainComponentAtts(node, G_ATTS);
+        return <G key={i} {...componentAtts}>{childs}</G>;
+      case 'path':
+        componentAtts = this.obtainComponentAtts(node, PATH_ATTS);
+        return <Path key={i} {...componentAtts}>{childs}</Path>;
+      case 'circle':
+        componentAtts = this.obtainComponentAtts(node, CIRCLE_ATTS);
+        return <Circle key={i} {...componentAtts}>{childs}</Circle>;
+      case 'rect':
+        componentAtts = this.obtainComponentAtts(node, RECT_ATTS);
+        return <Rect key={i} {...componentAtts}>{childs}</Rect>;
+      case 'line':
+        componentAtts = this.obtainComponentAtts(node, LINE_ATTS);
+        return <Line key={i} {...componentAtts}>{childs}</Line>;
+      case 'defs':
+        return <Defs key={i}>{childs}</Defs>;
+      case 'linearGradient':
+        componentAtts = this.obtainComponentAtts(node, LINEARG_ATTS);
+        return <LinearGradient key={i} {...componentAtts}>{childs}</LinearGradient>;
+      case 'radialGradient':
+        componentAtts = this.obtainComponentAtts(node, RADIALG_ATTS);
+        return <RadialGradient key={i} {...componentAtts}>{childs}</RadialGradient>;
+      case 'stop':
+        componentAtts = this.obtainComponentAtts(node, STOP_ATTS);
+        return <Stop key={i} {...componentAtts}>{childs}</Stop>;
+      case 'ellipse':
+        componentAtts = this.obtainComponentAtts(node, ELLIPSE_ATTS);
+        return <Ellipse key={i} {...componentAtts}>{childs}</Ellipse>;
+      case 'polygon':
+        componentAtts = this.obtainComponentAtts(node, POLYGON_ATTS);
+        return <Polygon key={i} {...componentAtts}>{childs}</Polygon>;
+      case 'polyline':
+        componentAtts = this.obtainComponentAtts(node, POLYLINE_ATTS);
+        return <Polyline key={i} {...componentAtts}>{childs}</Polyline>;
+      case 'text':
+        componentAtts = this.obtainComponentAtts(node, TEXT_ATTS);
+        return <Text key={i} {...componentAtts}>{childs}</Text>;
+      case 'tspan':
+        componentAtts = this.obtainComponentAtts(node, TEXT_ATTS);
+        if (componentAtts.y) {
+          componentAtts.y = fixYPosition(componentAtts.y, node)
+        }
+        return <TSpan key={i} {...componentAtts}>{childs}</TSpan>;
+      default:
+        return null;
     }
   }
 
@@ -242,7 +244,7 @@ class SvgUri extends Component{
       }));
     });
 
-     const componentAtts =  Array.from(attributes)
+    const componentAtts =  Array.from(attributes)
       .map(utils.camelCaseNodeName)
       .map(utils.removePixelsFromNodeValue)
       .filter(utils.getEnabledAttributes(enabledAttributes.concat(COMMON_ATTS)))
@@ -258,7 +260,7 @@ class SvgUri extends Component{
   inspectNode(node){
     // Only process accepted elements
     if (!ACCEPTED_SVG_ELEMENTS.includes(node.nodeName)) {
-      return (<View />);
+      return (<View key={indexForKey++} />);
     }
 
     // Process the xml node
@@ -267,17 +269,17 @@ class SvgUri extends Component{
     // if have children process them.
     // Recursive function.
     if (node.childNodes && node.childNodes.length > 0){
-        for (let i = 0; i < node.childNodes.length; i++){
-          const isTextValue = node.childNodes[i].nodeValue
-          if (isTextValue) {
-            arrayElements.push(node.childNodes[i].nodeValue)
-          } else {
-            const nodo = this.inspectNode(node.childNodes[i]);
-            if (nodo != null) {
-              arrayElements.push(nodo);
-            }
+      for (let i = 0; i < node.childNodes.length; i++){
+        const isTextValue = node.childNodes[i].nodeValue
+        if (isTextValue) {
+          arrayElements.push(node.childNodes[i].nodeValue)
+        } else {
+          const nodo = this.inspectNode(node.childNodes[i]);
+          if (nodo != null) {
+            arrayElements.push(nodo);
           }
         }
+      }
     }
 
     return this.createSVGElement(node, arrayElements);
@@ -299,9 +301,9 @@ class SvgUri extends Component{
       const rootSVG = this.inspectNode(doc.childNodes[0]);
 
       return(
-          <View style={this.props.style}>
-            {rootSVG}
-          </View>
+        <View style={this.props.style}>
+          {rootSVG}
+        </View>
       );
     } catch(e){
       console.error("ERROR SVG", e);
